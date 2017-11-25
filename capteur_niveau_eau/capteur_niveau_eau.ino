@@ -13,9 +13,8 @@
   bool messageSent;
 
   /* Constantes pour les broches */
-const byte TRIGGER_PIN = 2; // Broche TRIGGER
-const byte ECHO_PIN = 3; 
-//int  ECHO_PIN= 3;
+const byte Ping_Pin = 7; // branche sig
+
 const unsigned long MEASURE_TIMEOUT = 25000UL; // 25ms = ~8m à 340m/s
   
   void setup() {
@@ -24,9 +23,12 @@ const unsigned long MEASURE_TIMEOUT = 25000UL; // 25ms = ~8m à 340m/s
       sfxAntenna.begin();
       smeHumidity.begin();
       int initFinish=1;
-      pinMode(TRIGGER_PIN, OUTPUT);
-      digitalWrite(TRIGGER_PIN, LOW); // La broche TRIGGER doit être à LOW au repos
-      pinMode(ECHO_PIN, INPUT);
+      pinMode(Ping_Pin, OUTPUT);
+      digitalWrite(Ping_Pin, LOW); // La broche TRIGGER doit être à LOW au repos
+      delayMicroseconds(2);
+      digitalWrite(Ping_Pin, HIGH);
+      delayMicroseconds(5);
+      pinMode(Ping_Pin, INPUT);
   
       while (!SerialUSB) {
           ; 
@@ -101,12 +103,12 @@ const unsigned long MEASURE_TIMEOUT = 25000UL; // 25ms = ~8m à 340m/s
   
   float distance ( )
   {
-  digitalWrite(TRIGGER_PIN, HIGH);
+  digitalWrite(Ping_Pin, HIGH);
   delayMicroseconds(10);
-  digitalWrite(TRIGGER_PIN, LOW);
+  digitalWrite(Ping_Pin, LOW);
   const float T = temperature();
   const float Son_Vit = 331.4+0.607*T;//  331.4*(1+T/273)^0.5 = ; // mm/us
-  long measure = pulseIn(ECHO_PIN, HIGH);//,MEASURE_TIMEOUT); // la durée d'implusion
+  long measure = pulseIn(Ping_Pin, HIGH);//,MEASURE_TIMEOUT); // la durée d'implusion
   float distance = (measure /2.0) * Son_Vit; //
   SerialUSB.print("Distance : ");
   SerialUSB.print(distance);
