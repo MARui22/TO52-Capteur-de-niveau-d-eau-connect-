@@ -13,7 +13,7 @@
   bool messageSent;
 
   /* Constantes pour les broches */
-const byte Ping_Pin = 7; // branche sig
+const int Ping_Pin = 8;/*branche sig*/
 
 const unsigned long MEASURE_TIMEOUT = 25000UL; // 25ms = ~8m à 340m/s
   
@@ -23,12 +23,7 @@ const unsigned long MEASURE_TIMEOUT = 25000UL; // 25ms = ~8m à 340m/s
       sfxAntenna.begin();
       smeHumidity.begin();
       int initFinish=1;
-      pinMode(Ping_Pin, OUTPUT);
-      digitalWrite(Ping_Pin, LOW); // La broche TRIGGER doit être à LOW au repos
-      delayMicroseconds(2);
-      digitalWrite(Ping_Pin, HIGH);
-      delayMicroseconds(5);
-      pinMode(Ping_Pin, INPUT);
+      
   
       while (!SerialUSB) {
           ; 
@@ -39,7 +34,9 @@ const unsigned long MEASURE_TIMEOUT = 25000UL; // 25ms = ~8m à 340m/s
   void loop() {
     // put your main code here, to run repeatedly:
     
-    
+    float a = temperature ( );
+    delay (500);
+    float b = distance ( );
   }
   
   //Fonction d'envoie sur le réseau sigfox du niveau d'eau et de la température.
@@ -97,26 +94,44 @@ const unsigned long MEASURE_TIMEOUT = 25000UL; // 25ms = ~8m à 340m/s
   {
   double temperature = smeHumidity.readTemperature();
   Serial.print("Temperature :");
-  Serial.print(temperature);
+  Serial.println(temperature);
+  delay(1000);
   return temperature;
   }
   
   float distance ( )
   {
-  digitalWrite(Ping_Pin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(Ping_Pin, LOW);
+
+  pinMode(Ping_Pin, OUTPUT);          // Set pin to OUTPUT
+  digitalWrite(Ping_Pin, LOW);        // Ensure pin is low
+  delayMicroseconds(2);
+  digitalWrite(Ping_Pin, HIGH);       // Start ranging
+  delayMicroseconds(5);              //   with 5 microsecond burst
+  digitalWrite(Ping_Pin, LOW);        // End ranging
+  pinMode(Ping_Pin, INPUT);           // Set pin to INPUT
+  float measure = pulseIn(Ping_Pin, HIGH);//,MEASURE_TIMEOUT); // la durée d'implusion
+  SerialUSB.println(measure);
+ float distance =88;//= (measure /2.0) * Son_Vit; //
+  
+
   const float T = temperature();
   const float Son_Vit = 331.4+0.607*T;//  331.4*(1+T/273)^0.5 = ; // mm/us
-  long measure = pulseIn(Ping_Pin, HIGH);//,MEASURE_TIMEOUT); // la durée d'implusion
+
+SerialUSB.print("la vitesse de son est :");
+SerialUSB.println(Son_Vit);
+  
+
+  
   float distance = (measure /2.0) * Son_Vit; //
   SerialUSB.print("Distance : ");
   SerialUSB.print(distance);
-  SerialUSB.print (F("mm (")); // distance en mm
+  SerialUSB.println (F("mm")); // distance en mm
   SerialUSB.print(distance/10.0, 2); // distance en cm
-  SerialUSB.print (F("cm ("));
+  SerialUSB.println (F("cm"));
   SerialUSB.print (distance/1000.0, 2); // distance en m
-  SerialUSB.print (F("m ("));
+  SerialUSB.println (F("m"));
+
+
   delay (500);
   return distance;
   }
