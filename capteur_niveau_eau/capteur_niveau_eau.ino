@@ -8,10 +8,11 @@
   #include <SmeSFX.h>
   #include <Arduino.h>
   #include <HTS221.h>
+  #include <avr/sleep.h>
   
   char SensorMsg[3];
   bool messageSent;
-
+  int distance_avant;
   /* Constantes pour les broches */
 const int Ping_Pin = 8;/*branche sig*/
 
@@ -23,8 +24,8 @@ const unsigned long MEASURE_TIMEOUT = 25000UL; // 25ms = ~8m à 340m/s
       sfxAntenna.begin();
       smeHumidity.begin();
       int initFinish=1;
+      int distance_avant = 0;
       
-  
       while (!SerialUSB) {
           ; 
       }    
@@ -37,6 +38,17 @@ const unsigned long MEASURE_TIMEOUT = 25000UL; // 25ms = ~8m à 340m/s
     float a = temperature ( );
     delay (500);
     float b = distance ( );
+    int distance_avant = b;
+    set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+    if (distance_avant == b)
+      {
+          sleep_enable();
+        }
+    else 
+      {
+          sleep_disable();
+          sendMessage (b,a);
+        }
   }
   
   //Fonction d'envoie sur le réseau sigfox du niveau d'eau et de la température.
@@ -111,16 +123,12 @@ const unsigned long MEASURE_TIMEOUT = 25000UL; // 25ms = ~8m à 340m/s
   pinMode(Ping_Pin, INPUT);           // Set pin to INPUT
   float measure = pulseIn(Ping_Pin, HIGH);//,MEASURE_TIMEOUT); // la durée d'implusion
   SerialUSB.println(measure);
- float distance =88;//= (measure /2.0) * Son_Vit; //
-  
 
   const float T = temperature();
   const float Son_Vit = 331.4+0.607*T;//  331.4*(1+T/273)^0.5 = ; // mm/us
 
-SerialUSB.print("la vitesse de son est :");
-SerialUSB.println(Son_Vit);
-  
-
+  SerialUSB.print("la vitesse de son est :");
+  SerialUSB.println(Son_Vit);
   
   float distance = (measure /2.0) * Son_Vit; //
   SerialUSB.print("Distance : ");
