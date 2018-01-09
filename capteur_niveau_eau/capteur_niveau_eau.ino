@@ -8,7 +8,7 @@
   #include <SmeSFX.h>
   #include <Arduino.h>
   #include <HTS221.h>
-  #include <avr/sleep.h>
+ // #include <avr/sleep.h>
   
   char SensorMsg[3];
   bool messageSent;
@@ -35,11 +35,12 @@ const unsigned long MEASURE_TIMEOUT = 25000UL; // 25ms = ~8m à 340m/s
   void loop() {
     // put your main code here, to run repeatedly:
     
-    float a = temperature ( );
+  //  float a = temperature ( );
     delay (500);
     float b = distance ( );
     int distance_avant = b;
-    set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+  //set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+    /*
     if (distance_avant == b)
       {
           sleep_enable();
@@ -48,7 +49,7 @@ const unsigned long MEASURE_TIMEOUT = 25000UL; // 25ms = ~8m à 340m/s
       {
           sleep_disable();
           sendMessage (b,a);
-        }
+        }*/
   }
   
   //Fonction d'envoie sur le réseau sigfox du niveau d'eau et de la température.
@@ -106,8 +107,9 @@ const unsigned long MEASURE_TIMEOUT = 25000UL; // 25ms = ~8m à 340m/s
   {
   double temperature = smeHumidity.readTemperature();
   Serial.print("Temperature :");
-  Serial.println(temperature);
-  delay(1000);
+  Serial.print(temperature);
+  Serial.println("°C ");
+ 
   return temperature;
   }
   
@@ -121,23 +123,31 @@ const unsigned long MEASURE_TIMEOUT = 25000UL; // 25ms = ~8m à 340m/s
   delayMicroseconds(5);              //   with 5 microsecond burst
   digitalWrite(Ping_Pin, LOW);        // End ranging
   pinMode(Ping_Pin, INPUT);           // Set pin to INPUT
-  float measure = pulseIn(Ping_Pin, HIGH);//,MEASURE_TIMEOUT); // la durée d'implusion
-  SerialUSB.println(measure);
 
+ SerialUSB.println ("---------------------------------------------------");
+  
+  float measure = pulseIn(Ping_Pin, HIGH);//,MEASURE_TIMEOUT); // la durée d'implusion
+  SerialUSB.print ("mesure:");
+  SerialUSB.print(measure);
+  SerialUSB.println(" us");
+  
   const float T = temperature();
-  const float Son_Vit = 331.4+0.607*T;//  331.4*(1+T/273)^0.5 = ; // mm/us
+  const float Son_Vit = 331.4+0.607*T;//  331.4*(1+T/273)^0.5 = ; // mm/ms
 
   SerialUSB.print("la vitesse de son est :");
-  SerialUSB.println(Son_Vit);
+  SerialUSB.print(Son_Vit);
+  SerialUSB.println(" m/s");
+
   
-  float distance = (measure /2.0) * Son_Vit; //
-  SerialUSB.print("Distance : ");
+  float distance = (measure /2.0/1000) * Son_Vit; 
+  SerialUSB.print("Distance reelle : ");
   SerialUSB.print(distance);
   SerialUSB.println (F("mm")); // distance en mm
   SerialUSB.print(distance/10.0, 2); // distance en cm
   SerialUSB.println (F("cm"));
   SerialUSB.print (distance/1000.0, 2); // distance en m
   SerialUSB.println (F("m"));
+  SerialUSB.println ("---------------------------------------------------");
 
 
   delay (500);
