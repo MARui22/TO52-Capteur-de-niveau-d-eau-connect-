@@ -138,7 +138,7 @@ float distance ( )
   SerialUSB.print("la vitesse de son est :");
   SerialUSB.println(Son_Vit);
 
-  float distance = (measure / 2.0) * Son_Vit; //
+  float distance = (measure / 2.0/1000) * Son_Vit; //
   SerialUSB.print("Distance : ");
   SerialUSB.print(distance);
   SerialUSB.println (F("mm")); // distance en mm
