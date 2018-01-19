@@ -83,39 +83,36 @@
 
                 <TextView
                     android:id="@+id/TemperaturTitle_textview"
-                    android:layout_width="308dp"
+                    android:layout_width="158dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="#fff"
                     android:elevation="4dp"
                     android:gravity="center"
                     android:padding="15dp"
-                    android:text="Température"
-                    />
+                    android:text="T en °c" />
 
                 <TextView
                     android:id="@+id/profondeurTitle_textview"
-                    android:layout_width="312dp"
+                    android:layout_width="187dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="#fff"
-                    android:elevation="4dp"
                     android:gravity="center"
+                    android:elevation="4dp"
                     android:padding="15dp"
-                    android:text="Profondeur"
-                    />
+                    android:text="P en cm" />
 
                 <TextView
                     android:id="@+id/dateTitle_textview"
-                    android:layout_width="319dp"
+                    android:layout_width="249dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="#fff"
                     android:elevation="4dp"
                     android:gravity="center"
                     android:padding="15dp"
-                    android:text="Date"
-                     />
+                    android:text="Date" />
 
             </LinearLayout>
         </LinearLayout>

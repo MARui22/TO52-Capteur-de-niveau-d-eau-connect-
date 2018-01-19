@@ -18,7 +18,7 @@ public class CustomAdapter extends ArrayAdapter<String> {
 
     private Activity mContext;
     private ArrayList<String> mDevice;
-    private ArrayList<String> mRssi;
+    //private ArrayList<String> mRssi;
 
     //The ArrayAdapter constructor
     public CustomAdapter(Activity context, ArrayList<String> device, ArrayList<String> rssi, ArrayList<String> values) {
@@ -26,7 +26,7 @@ public class CustomAdapter extends ArrayAdapter<String> {
        mContext= context;
         //Set the value of variables
         mDevice = device;
-        mRssi = rssi;
+        //mRssi = rssi;
     }
 
     //Here the ListView will be displayed
@@ -34,9 +34,9 @@ public class CustomAdapter extends ArrayAdapter<String> {
     public View getView(int position, View view, ViewGroup parent) {
         View layoutView = mContext.getLayoutInflater().inflate(R.layout.ble_device_adapter, null, true);
         TextView mDeviceNameView = (TextView) layoutView.findViewById(R.id.Device_name_textview);
-        TextView mDeviceRssiView = (TextView) layoutView.findViewById(R.id.Device_rssi_textview);
+       // TextView mDeviceRssiView = (TextView) layoutView.findViewById(R.id.Device_rssi_textview);
         mDeviceNameView.setText(mDevice.get(position));
-        mDeviceRssiView.setText(mRssi.get(position));
+        //mDeviceRssiView.setText(mRssi.get(position));
         return layoutView;
     }
 }

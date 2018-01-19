@@ -24,7 +24,9 @@ import com.example.vladmir.appto52.Modele.Cuve;
 import com.example.vladmir.appto52.R;
 
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -138,7 +140,10 @@ public class ConsultingActivity extends AppCompatActivity {
 
         temp = temp1+ (temp2/100);
         prof= prof1 + (prof2/100);
-        date = "13/01/2018";
+        Date t = new Date();
+        SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        String s = f.format(t);
+        date = s;
         cuve.setmDate(date);
         cuve.setmProfondeur(prof);
         cuve.setmTemperature(temp);
